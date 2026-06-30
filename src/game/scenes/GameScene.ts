@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import Board from "../board/Board";
+import TileBag from "../TileBag";
+import Hand from "../hand/Hand";
 
 export default class GameScene extends Phaser.Scene {
     private board!: Board;
@@ -12,7 +14,11 @@ export default class GameScene extends Phaser.Scene {
 
         this.board = new Board(this);
 
-        this.board.addTile("A", 300, 250);
+        const tileBag = new TileBag();
+
+        const hand = new Hand(this.board, tileBag);
+
+        hand.drawStartingHand();
 
     }
 }

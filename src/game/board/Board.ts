@@ -11,7 +11,7 @@ export default class Board {
         this.scene = scene;
     }
 
-    public addTile(letter: string, x: number, y: number) {
+    public addTile(letter: string, x: number, y: number): LetterTile {
         const tile = new LetterTile(
             this.scene,
             x,
@@ -19,7 +19,9 @@ export default class Board {
             letter,
             (tile) => this.snapTile(tile)
         );
+
         this.tiles.push(tile);
+        return tile;
     }
 
     public getTiles() {
