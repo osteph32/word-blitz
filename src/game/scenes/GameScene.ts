@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import Board from "../board/Board";
 
 export default class GameScene extends Phaser.Scene {
+    private board!: Board;
 
     constructor() {
         super("GameScene");
@@ -9,9 +10,9 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
 
-        const board = new Board(this);
+        this.board = new Board(this);
 
-        board.addTile("A", 300, 250);
+        this.board.addTile("A", 300, 250);
 
     }
 }

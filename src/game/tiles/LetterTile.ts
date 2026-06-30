@@ -5,15 +5,17 @@ export default class LetterTile extends Phaser.GameObjects.Container {
     private letterText: Phaser.GameObjects.Text;
     private startX: number;
     private startY: number;
+    private onDrop: (tile: LetterTile) => void;
 
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
-        letter: string
+        letter: string,
+        onDrop: (tile: LetterTile) => void
     ) {
         super(scene, x, y);
-
+        this.onDrop = onDrop;
         this.startX = x;
         this.startY = y;
 
@@ -51,14 +53,17 @@ export default class LetterTile extends Phaser.GameObjects.Container {
 
         this.on("dragend", () => {
             this.setScale(1);
+            this.onDrop(this);
+        });
+    }
 
-            scene.tweens.add({
-                targets: this,
-                x: this.startX,
-                y: this.startY,
-                duration: 150,
-                ease: "Quad.easeOut",
-            });
+    public snapTo(x: number, y: number) {
+        this.scene.tweens.add({
+            targets: this,
+            x,
+            y,
+            duration: 120,
+            ease: "Quad.easeOut",
         });
     }
 }
