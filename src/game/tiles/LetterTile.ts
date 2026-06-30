@@ -6,6 +6,8 @@ export default class LetterTile extends Phaser.GameObjects.Container {
     private startX: number;
     private startY: number;
     private onDrop: (tile: LetterTile) => void;
+    private homeX: number;
+    private homeY: number;
 
     constructor(
         scene: Phaser.Scene,
@@ -15,17 +17,23 @@ export default class LetterTile extends Phaser.GameObjects.Container {
         onDrop: (tile: LetterTile) => void
     ) {
         super(scene, x, y);
+        
         this.onDrop = onDrop;
+        
         this.startX = x;
         this.startY = y;
 
-        this.background = scene.add.rectangle(0, 0, 64, 64, 0xf5e6b3);
-        this.background.setStrokeStyle(2, 0x444444);
+        this.homeX = x;
+        this.homeY = y;
+
+        this.background = scene.add.rectangle(0, 0, 64, 64, 0xf6e7b0);
+        this.background.setStrokeStyle(3, 0x8b6b3f);
 
         this.letterText = scene.add.text(0, 0, letter, {
-            fontSize: "36px",
-            color: "#222222",
+            fontFamily: "Arial",
+            fontSize: "38px",
             fontStyle: "bold",
+            color: "#3a2b18",
         });
 
         this.letterText.setOrigin(0.5);
@@ -43,7 +51,14 @@ export default class LetterTile extends Phaser.GameObjects.Container {
         scene.input.setDraggable(this);
 
         this.on("dragstart", () => {
-            this.setScale(1.1);
+            this.setDepth(100);
+            this.setScale(1.15);
+
+            this.scene.tweens.add({
+                targets: this,
+                angle: Phaser.Math.Between(-4, 4),
+                duration: 80
+            });
         });
 
         this.on("drag", (_pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
@@ -52,17 +67,33 @@ export default class LetterTile extends Phaser.GameObjects.Container {
         });
 
         this.on("dragend", () => {
+            this.setDepth(0);
             this.setScale(1);
+            this.setAngle(0);
+
             this.onDrop(this);
         });
     }
 
     public snapTo(x: number, y: number) {
+        this.homeX = x;
+        this.homeY = y;
+
         this.scene.tweens.add({
             targets: this,
             x,
             y,
-            duration: 120,
+            duration: 180,
+            ease: "Quad.easeOut",
+        });
+    }
+
+    public returnHome() {
+        this.scene.tweens.add({
+            targets: this,
+            x: this.homeX,
+            y: this.homeY,
+            duration: 180,
             ease: "Quad.easeOut",
         });
     }

@@ -30,8 +30,15 @@ export default class Board {
 
     public snapTile(tile: LetterTile) {
         const { col, row } = this.grid.worldToGrid(tile.x, tile.y);
+
+        if (this.grid.isOccupied(col, row)) {
+            tile.returnHome();
+            return;
+        }
+
         const pos = this.grid.gridToWorld(col, row);
 
+        this.grid.occupy(col, row);
         tile.snapTo(pos.x, pos.y);
     }
 }
